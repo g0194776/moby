@@ -129,12 +129,14 @@ ENV DOCKER_CROSSPLATFORMS \
 	freebsd/amd64 freebsd/386 freebsd/arm \
 	windows/amd64 windows/386
 
-RUN curl -fsSL "https://storage.googleapis.com/golang/go1.4.3.linux-amd64.tar.gz" \
-	| tar -xzC /root && \
+COPY go1.4.3.linux-amd64.tar.gz /tmp/go1.4.3.linux-amd64.tar.gz
+COPY go1.6.4.src.tar.gz /tmp/go1.6.4.src.tar.gz
+
+
+RUN tar -zxvf /tmp/go1.4.3.linux-amd64.tar.gz -C /root && \
 	mv /root/go /root/go1.4 && \
 	cd /usr/local && \
-	curl -fsSL "https://storage.googleapis.com/golang/go$GO_VERSION.src.tar.gz" \
-	| tar -xzC /usr/local && \
+        tar -zxvf /tmp/go1.6.4.src.tar.gz -C /usr/local && \
 	cd go && \
 	printf 'diff --git a/src/runtime/sys_darwin_amd64.s b/src/runtime/sys_darwin_amd64.s\nindex e09b906..fa8ff2f 100644\n--- a/src/runtime/sys_darwin_amd64.s\n+++ b/src/runtime/sys_darwin_amd64.s\n@@ -157,6 +157,7 @@ systime:\n\t// Fall back to system call (usually first call in this thread).\n\tMOVQ\tSP, DI\n\tMOVQ\t$0, SI\n+\tMOVQ\t$0, DX  // required as of Sierra; Issue 16570\n\tMOVL\t$(0x2000000+116), AX\n\tSYSCALL\n\tCMPQ\tAX, $0\n' | patch -p1 && \
 	cd src && \
