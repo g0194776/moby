@@ -85,6 +85,63 @@ func (s *DockerSuite) TestExecApiStart(c *check.C) {
 	startExec(c, id, http.StatusOK)
 }
 
+func (s *DockerSuite) TestExecWithValideCommand(c *check.C) {
+	testRequires(c, DaemonIsLinux)
+	containerName := "exec_test"
+	dockerCmd(c, "run", "-d", "-t", "--name", containerName, "busybox", "top")
+
+	id := createExecCmd(c, containerName, "true")
+	c.Assert(id, checker.NotNil)
+	c.Logf("Got container's exec ID： %s", id)
+	startExec(c, id, http.StatusOK)
+	c.Logf("Waiting for background thread working to kill un-used Exec-IDs: 60s")
+	time.Sleep(time.Second * 60)
+	c.Logf("Beginning to inspects container details %s...", containerName)
+	var execStructJSON struct{ ExecIDs []string }
+	inspectContainer(c, containerName, &execStructJSON)
+
+	c.Assert(execStructJSON.ExecIDs, checker.IsNil)
+}
+
+func (s *DockerSuite) TestExecWithStoppedContainer(c *check.C) {
+	testRequires(c, DaemonIsLinux)
+	containerName := "exec_test"
+	//this command will occur container stopping immediately.
+	dockerCmd(c, "run", "-d", "-t", "--name", containerName, "busybox", "/bin/sh")
+
+	id := createExecCmd(c, containerName, "true")
+	c.Assert(id, checker.NotNil)
+	c.Logf("Got container's exec ID： %s", id)
+
+	//generally, the docker daemon will return an OCI runtime error with status 16.
+	//BUT what if we check container running status before performing EXEC operation, the result will become better pretty.
+	startExec(c, id, http.StatusOK)
+	c.Logf("Waiting for background thread working to kill un-used Exec-IDs: 60s")
+	time.Sleep(time.Second * 60)
+	c.Logf("Beginning to inspects container details %s...", containerName)
+	var execStructJSON struct{ ExecIDs []string }
+	inspectContainer(c, containerName, &execStructJSON)
+	c.Assert(execStructJSON.ExecIDs, checker.IsNil)
+}
+
+func (s *DockerSuite) TestExecWithInValideCommand(c *check.C) {
+	testRequires(c, DaemonIsLinux)
+	containerName := "exec_test"
+	dockerCmd(c, "run", "-d", "-t", "--name", containerName, "busybox", "top")
+
+	id := createExecCmd(c, containerName, "lslslslsls")
+	c.Assert(id, checker.NotNil)
+	c.Logf("Got container's exec ID： %s", id)
+	startExec(c, id, http.StatusNotFound)
+	c.Logf("Waiting for background thread working to kill un-used Exec-IDs: 60s")
+	time.Sleep(time.Second * 60)
+	c.Logf("Beginning to inspects container details %s...", containerName)
+	var execStructJSON struct{ ExecIDs []string }
+	inspectContainer(c, containerName, &execStructJSON)
+
+	c.Assert(execStructJSON.ExecIDs, checker.IsNil)
+}
+
 func (s *DockerSuite) TestExecApiStartBackwardsCompatible(c *check.C) {
 	runSleepingContainer(c, "-d", "--name", "test")
 	id := createExec(c, "test")
@@ -153,7 +210,11 @@ func (s *DockerSuite) TestExecApiStartWithDetach(c *check.C) {
 }
 
 func createExec(c *check.C, name string) string {
-	_, b, err := sockRequest("POST", fmt.Sprintf("/containers/%s/exec", name), map[string]interface{}{"Cmd": []string{"true"}})
+	return createExecCmd(c, name, "true")
+}
+
+func createExecCmd(c *check.C, name, cmd string) string {
+	_, b, err := sockRequest("POST", fmt.Sprintf("/containers/%s/exec", name), map[string]interface{}{"Cmd": []string{cmd}})
 	c.Assert(err, checker.IsNil, check.Commentf(string(b)))
 
 	createResp := struct {
@@ -175,6 +236,15 @@ func startExec(c *check.C, id string, code int) {
 
 func inspectExec(c *check.C, id string, out interface{}) {
 	resp, body, err := sockRequestRaw("GET", fmt.Sprintf("/exec/%s/json", id), nil, "")
+	c.Assert(err, checker.IsNil)
+	defer body.Close()
+	c.Assert(resp.StatusCode, checker.Equals, http.StatusOK)
+	err = json.NewDecoder(body).Decode(out)
+	c.Assert(err, checker.IsNil)
+}
+
+func inspectContainer(c *check.C, id string, out interface{}) {
+	resp, body, err := sockRequestRaw("GET", fmt.Sprintf("/containers/%s/json", id), nil, "")
 	c.Assert(err, checker.IsNil)
 	defer body.Close()
 	c.Assert(resp.StatusCode, checker.Equals, http.StatusOK)

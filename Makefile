@@ -26,7 +26,7 @@ DOCKER_ENVS := \
 	-e TESTDIRS \
         -e DOCKER_HOST=unix:///var/run/docker.sock \
         -e BINDDIR= \
-	-e TESTFLAGS \
+	-e TESTFLAGS="$(TESTFLAGS)" \
 	-e TIMEOUT
 # note: we _cannot_ add "-e DOCKER_BUILDTAGS" here because even if it's unset in the shell, that would shadow the "ENV DOCKER_BUILDTAGS" set in our Dockerfile, which is very important for our official builds
 

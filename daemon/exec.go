@@ -158,18 +158,34 @@ func (d *Daemon) ContainerExecStart(ctx context.Context, name string, stdin io.R
 		return fmt.Errorf("Error: Exec command %s is already running", ec.ID)
 	}
 	ec.Running = true
+	ec.Unlock()
+
+
+	c := d.containers.Get(ec.ContainerID)
+	if c == nil || c.State == nil {
+		return fmt.Errorf("Target container %s for Exec-ID %s had not existed.", name, ec.ContainerID)
+	}
+	if !c.IsRunning() {
+		return fmt.Errorf("Target container %s for Exec-ID %s had been stopped.", name, ec.ContainerID)
+	}
+	logrus.Debugf("starting exec command %s in container %s", ec.ID, c.ID)
+	d.LogContainerEvent(c, "exec_start: "+ec.Entrypoint+" "+strings.Join(ec.Args, " "))
+
 	defer func() {
 		if err != nil {
+			ec.Lock()
 			ec.Running = false
 			exitCode := 126
 			ec.ExitCode = &exitCode
+			if err := ec.CloseStreams(); err != nil {
+				logrus.Errorf("failed to cleanup exec %s streams: %s", c.ID, err)
+			}
+			ec.Unlock()
+			c.ExecCommands.Delete(ec.ID)
 		}
 	}()
-	ec.Unlock()
 
-	c := d.containers.Get(ec.ContainerID)
-	logrus.Debugf("starting exec command %s in container %s", ec.ID, c.ID)
-	d.LogContainerEvent(c, "exec_start: "+ec.Entrypoint+" "+strings.Join(ec.Args, " "))
+
 
 	if ec.OpenStdin && stdin != nil {
 		r, w := io.Pipe()
