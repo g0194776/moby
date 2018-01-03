@@ -1,3 +1,7 @@
+This repository is forked by Moby.
+
+All of bug fixes are around the branch `1.12.x`.
+
 The Moby Project
 ================
 
