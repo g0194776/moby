@@ -429,7 +429,7 @@ func (ls *layerStore) Release(l Layer) ([]Metadata, error) {
 	return ls.releaseLayer(layer)
 }
 
-func (ls *layerStore) CreateRWLayer(name string, parent ChainID, mountLabel string, initFunc MountInit, storageOpt map[string]string) (RWLayer, error) {
+func (ls *layerStore) CreateRWLayer(name /*Container ID*/ string, parent /*Image RootFS ChainID(Readonly)*/ ChainID, mountLabel string, initFunc MountInit, storageOpt map[string]string) (RWLayer, error) {
 	ls.mountL.Lock()
 	defer ls.mountL.Unlock()
 	m, ok := ls.mounts[name]
@@ -466,6 +466,8 @@ func (ls *layerStore) CreateRWLayer(name string, parent ChainID, mountLabel stri
 	}
 
 	if initFunc != nil {
+		// initMount JUST does FS preparing and TRY mounting & un-mounting.
+		// pid = ContainerID + special formatted name, e.g. "-init"
 		pid, err = ls.initMount(m.mountID, pid, mountLabel, initFunc, storageOpt)
 		if err != nil {
 			return nil, err

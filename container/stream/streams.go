@@ -113,12 +113,16 @@ func (c *Config) CloseStreams() error {
 
 // CopyToPipe connects streamconfig with a libcontainerd.IOPipe
 func (c *Config) CopyToPipe(iop libcontainerd.IOPipe) {
-	copyFunc := func(w io.Writer, r io.Reader) {
+	// Close stdout and stderr FIFO as soon as possible.
+	// #30063
+	copyFunc := func(w io.Writer, r io.ReadCloser) {
 		c.Add(1)
 		go func() {
 			if _, err := pools.Copy(w, r); err != nil {
 				logrus.Errorf("stream copy error: %+v", err)
 			}
+
+			r.Close()
 			c.Done()
 		}()
 	}

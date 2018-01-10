@@ -109,6 +109,7 @@ func Init(home string, options []string, uidMaps, gidMaps []idtools.IDMap) (grap
 		return nil, graphdriver.ErrNotSupported
 	}
 
+	// To detect that what underlying type of FileSystem is used for.
 	fsMagic, err := graphdriver.GetFSMagic(home)
 	if err != nil {
 		return nil, err
@@ -132,6 +133,8 @@ func Init(home string, options []string, uidMaps, gidMaps []idtools.IDMap) (grap
 		return nil, err
 	}
 
+	// Make sure that currently used path of docker home is mounting on the OS.
+	// Generally, it've mounted with a relative device.
 	if err := mount.MakePrivate(home); err != nil {
 		return nil, err
 	}
