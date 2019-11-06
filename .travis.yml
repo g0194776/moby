@@ -5,4 +5,4 @@ env:
   matrix
     - OS_TYPE=centos OS_VERSION=7
 script:
-  - make rpm centos
+  - make rpm
