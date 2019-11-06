@@ -67,7 +67,7 @@ binary: build ## build the linux binaries
 	$(DOCKER_RUN_DOCKER) hack/make.sh binary
 
 build: bundles
-	docker build ${DOCKER_BUILD_ARGS} -t "$(DOCKER_IMAGE)" -f "$(DOCKERFILE)" .
+	docker build ${DOCKER_BUILD_ARGS} -t "$(DOCKER_IMAGE)" -f "$(DOCKERFILE)" . >/dev/null 2>&1
 
 build-gccgo: bundles
 	docker build ${DOCKER_BUILD_ARGS} -t "$(DOCKER_IMAGE)-gccgo" -f Dockerfile.gccgo .
