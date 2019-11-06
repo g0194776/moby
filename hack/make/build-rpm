@@ -79,7 +79,10 @@ set -e
 		[ -d "$dir" ] || { echo >&2 "skipping nonexistent $dir"; continue; }
 		version="$(basename "$dir")"
 		suite="${version##*-}"
-
+		if [[ $version != centos-7 ]];then
+		        echo "Hack: build-rpm"
+                        continue
+                fi
 		image="dockercore/builder-rpm:$version"
 		if ! docker inspect "$image" &> /dev/null; then
 			( set -x && docker build ${DOCKER_BUILD_ARGS} -t "$image" "$dir" )
