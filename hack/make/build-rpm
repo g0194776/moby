@@ -80,9 +80,8 @@ set -e
 		version="$(basename "$dir")"
 		suite="${version##*-}"
 		if [[ $version != centos-7 ]];then
-		        echo "Hack: build-rpm"
-                        continue
-                fi
+            continue
+        fi
 		image="dockercore/builder-rpm:$version"
 		if ! docker inspect "$image" &> /dev/null; then
 			( set -x && docker build ${DOCKER_BUILD_ARGS} -t "$image" "$dir" )
@@ -154,7 +153,10 @@ set -e
 		fi
 		tempImage="docker-temp/build-rpm:$version"
 		( set -x && docker build -t "$tempImage" -f $DEST/$version/Dockerfile.build . )
+		echo "$DEST/$version"
 		docker run --rm "$tempImage" bash -c 'cd /root/rpmbuild && tar -c *RPMS' | tar -xvC "$DEST/$version"
+		echo "******************************************88888"
+		ls -l "$DEST/$version"
 		docker rmi "$tempImage"
 	done
 
