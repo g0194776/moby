@@ -5,6 +5,9 @@ env:
   matrix
     - OS_TYPE=centos OS_VERSION=7
 
+before_install:
+- if [ -z "$TRAVIS_TAG" ]; then exit 0; fi
+
 after_success:
 - test -n "$TRAVIS_TAG"
 
