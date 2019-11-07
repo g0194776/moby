@@ -5,8 +5,8 @@ env:
   matrix
     - OS_TYPE=centos OS_VERSION=7
 
-#before_install:
-#- if [ -z "$TRAVIS_TAG" ]; then exit 0; fi
+before_install:
+- if [ -z "$TRAVIS_TAG" ]; then exit 0; fi
 
 after_success:
 - test -n "$TRAVIS_TAG"
@@ -16,15 +16,9 @@ deploy:
   skip_cleanup: true
   script: make rpm
   on:
-  #  tags: true
+    tags: true
     condition: $TRAVIS_OS_NAME = linux
 
-- provider: script
-  skip_cleanup: true
-  script: ls -ltR
-  on:
-  #  tags: true
-    condition: $TRAVIS_OS_NAME = linux
 
 - provider: releases
   api_key:
@@ -34,4 +28,4 @@ deploy:
        - RPMS/noarch/docker-engine-selinux-1.12.7-1.el7.noarch.rpm
   skip_cleanup: true
   on:
-   #   tags: true
+      tags: true
