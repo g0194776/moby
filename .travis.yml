@@ -16,14 +16,14 @@ deploy:
   skip_cleanup: true
   script: make rpm
   on:
-    tags: true
+  #  tags: true
     condition: $TRAVIS_OS_NAME = linux
 
 - provider: script
   skip_cleanup: true
   script: ls -ltR
   on:
-    tags: true
+  #  tags: true
     condition: $TRAVIS_OS_NAME = linux
 
 - provider: releases
@@ -34,4 +34,4 @@ deploy:
        - RPMS/noarch/docker-engine-selinux-1.12.7-1.el7.noarch.rpm
   skip_cleanup: true
   on:
-      tags: true
+   #   tags: true
