@@ -158,6 +158,9 @@ set -e
 		echo "******************************************88888"
 		ls -tRl "$DEST/$version"
 		docker rmi "$tempImage"
+
+
+		
 	done
 	source "$(dirname "$BASH_SOURCE")/.integration-daemon-stop"
 ) 2>&1 | tee -a $DEST/test.log
