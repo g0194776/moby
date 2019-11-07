@@ -23,8 +23,8 @@ deploy:
   api_key:
        secure: "$TOKEN"
   file: 
-       - /root/rpmbuild/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
-       - /root/rpmbuild/RPMS/noarch/docker-engine-selinux-1.12.7-1.el7.noarch.rpm
+       - RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
+       - RPMS/noarch/docker-engine-selinux-1.12.7-1.el7.noarch.rpm
   skip_cleanup: true
   on:
       tags: true
