@@ -159,11 +159,5 @@ set -e
 		ls -tRl "$DEST/$version"
 		docker rmi "$tempImage"
 	done
-	echo "hack1"
-    ls -tRl "$DEST/$version"
 	source "$(dirname "$BASH_SOURCE")/.integration-daemon-stop"
-	echo "hack2"
-    ls -tRl "$DEST/$version"
 ) 2>&1 | tee -a $DEST/test.log
-echo "hack3"
-ls -tRl "$DEST/$version"
