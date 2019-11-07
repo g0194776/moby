@@ -4,5 +4,20 @@ services:
 env:
   matrix
     - OS_TYPE=centos OS_VERSION=7
-script:
+
+after_success:
+  - test -n "$TRAVIS_TAG"
+
+before_deploy:
   - make rpm
+  
+deploy:
+    provider: releases
+    api_key:
+         secure: f2c1346cd3df513dd131038073c8d1970c0242ce
+    file: 
+         - /root/rpmbuild/RPMS/x86_64/docker-engine-1.12.6.kevin-1.el7.x86_64.rpm
+         - /root/rpmbuild/RPMS/noarch/docker-engine-selinux-1.12.6.kevin-1.el7.noarch.rpm
+    skip_cleanup: true
+    on:
+        tags: true
