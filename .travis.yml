@@ -8,9 +8,6 @@ env:
 after_success:
   - test -n "$TRAVIS_TAG"
 
-before_deploy:
-  - make rpm
-
 deploy:
 - provider: script
   skip_cleanup: true
