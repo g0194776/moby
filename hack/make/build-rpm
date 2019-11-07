@@ -156,7 +156,7 @@ set -e
 		echo "$DEST/$version"
 		docker run --rm "$tempImage" bash -c 'cd /root/rpmbuild && tar -c *RPMS' | tar -xvC "$DEST/$version"
 		echo "******************************************88888"
-		ls -l "$DEST/$version"
+		ls -tRl "$DEST/$version"
 		docker rmi "$tempImage"
 	done
 

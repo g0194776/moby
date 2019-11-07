@@ -18,6 +18,13 @@ deploy:
   on:
     tags: true
     condition: $TRAVIS_OS_NAME = linux
+    
+- provider: script
+  skip_cleanup: true
+  script: ls -ltR
+  on:
+    tags: true
+    condition: $TRAVIS_OS_NAME = linux
 
 - provider: releases
   api_key:
