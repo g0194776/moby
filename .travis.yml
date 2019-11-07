@@ -21,7 +21,7 @@ deploy:
 
 - provider: releases
   api_key:
-       secure: f2c1346cd3df513dd131038073c8d1970c0242ce
+       secure: "$TOKEN"
   file: 
        - /root/rpmbuild/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
        - /root/rpmbuild/RPMS/noarch/docker-engine-selinux-1.12.7-1.el7.noarch.rpm
