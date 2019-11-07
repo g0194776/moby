@@ -10,14 +10,21 @@ after_success:
 
 before_deploy:
   - make rpm
-  
+
 deploy:
-    provider: releases
-    api_key:
-         secure: f2c1346cd3df513dd131038073c8d1970c0242ce
-    file: 
-         - /root/rpmbuild/RPMS/x86_64/docker-engine-1.12.6.kevin-1.el7.x86_64.rpm
-         - /root/rpmbuild/RPMS/noarch/docker-engine-selinux-1.12.6.kevin-1.el7.noarch.rpm
-    skip_cleanup: true
-    on:
-        tags: true
+- provider: script
+  skip_cleanup: true
+  script: make rpm
+  on:
+    tags: true
+    condition: $TRAVIS_OS_NAME = linux
+
+- provider: releases
+  api_key:
+       secure: f2c1346cd3df513dd131038073c8d1970c0242ce
+  file: 
+       - /root/rpmbuild/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
+       - /root/rpmbuild/RPMS/noarch/docker-engine-selinux-1.12.7-1.el7.noarch.rpm
+  skip_cleanup: true
+  on:
+      tags: true
