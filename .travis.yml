@@ -6,7 +6,7 @@ env:
     - OS_TYPE=centos OS_VERSION=7
 
 after_success:
-  - test -n "$TRAVIS_TAG"
+- test -n "$TRAVIS_TAG"
 
 deploy:
 - provider: script
