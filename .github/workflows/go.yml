@@ -24,10 +24,11 @@ jobs:
     - name: Building RPMs
       run: |
         make rpm
+        ls -sl
 
     - name: Upload to release
       uses: JasonEtco/upload-to-release@master
       with:
-        args: RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
+        args: go/src/github.com/docker/docker/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
