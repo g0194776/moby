@@ -51,6 +51,7 @@ jobs:
   
     - name: Upload to release
       uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
       with:
         files: |
           bundles/1.12.7/build-rpm/centos-7/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
