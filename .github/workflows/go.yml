@@ -40,11 +40,20 @@ jobs:
 #        files: >
 #          bundles/1.12.7/build-rpm/centos-7/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
    
+#    - name: Upload to release
+#      uses: svenstaro/upload-release-action@v1-release
+#      with:
+#        repo_token: ${{ secrets.TOKEN }}
+#        file: bundles/1.12.7/build-rpm/centos-7/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
+#        asset_name: docker-engine
+#        tag: ${{ github.ref }}
+#        overwrite: true
+  
     - name: Upload to release
-      uses: svenstaro/upload-release-action@v1-release
+      uses: softprops/action-gh-release@v1
       with:
-        repo_token: ${{ secrets.TOKEN }}
-        file: bundles/1.12.7/build-rpm/centos-7/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
-        asset_name: docker-engine
-        tag: ${{ github.ref }}
-        overwrite: true
+        files: |
+          bundles/1.12.7/build-rpm/centos-7/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
+          bundles/1.12.7/build-rpm/centos-7/RPMS/noarch/docker-engine-selinux-1.12.7-1.el7.noarch.rpm
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
