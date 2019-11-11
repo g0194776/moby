@@ -39,10 +39,12 @@ jobs:
 #        gzip: folders
 #        files: >
 #          bundles/1.12.7/build-rpm/centos-7/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
-
+   
     - name: Upload to release
-      uses: JasonEtco/upload-to-release@master
+      uses: svenstaro/upload-release-action@v1-release
       with:
-        args: bundles/1.12.7/build-rpm/centos-7/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        repo_token: ${{ secrets.TOKEN }}
+        file: bundles/1.12.7/build-rpm/centos-7/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
+        asset_name: docker-engine
+        tag: ${{ github.ref }}
+        overwrite: true
