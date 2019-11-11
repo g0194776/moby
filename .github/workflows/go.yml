@@ -17,6 +17,17 @@ jobs:
       with:
         path: go/src/github.com/docker/docker
 
-    - name: Performing Test
+#    - name: Performing Test
+#      run: |
+#        make test
+
+    - name: Building RPMs
       run: |
-        make test
+        make rpm
+
+    - name: Upload to release
+      uses: JasonEtco/upload-to-release@master
+      with:
+        args: RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
