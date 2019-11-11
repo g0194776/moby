@@ -27,7 +27,7 @@ jobs:
         ls -sl
        
     - name: Upload to release
-      uses: meeDamian/github-release@0.1
+      uses: meeDamian/github-release@1.0
       with:
         token: ${{ secrets.TOKEN }}
         tag: v1.12.7
