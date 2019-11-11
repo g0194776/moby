@@ -26,23 +26,23 @@ jobs:
         make rpm
         ls -sl
        
-    - name: Upload to release
-      uses: meeDamian/github-release@1.0
-      with:
-        token: ${{ secrets.TOKEN }}
-        tag: v1.12.7
-        name: New Release
-        body: >
-          This release actually changes the fabric of the reality, so be careful 
-          while applying, as error in database migration, can irrecoverably wipe 
-          some laws of physics.  
-        gzip: folders
-        files: >
-          bundles/1.12.7/build-rpm/centos-7/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
-
 #    - name: Upload to release
-#      uses: JasonEtco/upload-to-release@master
+#      uses: meeDamian/github-release@1.0
 #      with:
-#        args: bundles/1.12.7/build-rpm/centos-7/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+#        token: ${{ secrets.TOKEN }}
+#        tag: v1.12.7
+#        name: New Release
+#        body: >
+#          This release actually changes the fabric of the reality, so be careful 
+#          while applying, as error in database migration, can irrecoverably wipe 
+#          some laws of physics.  
+#        gzip: folders
+#        files: >
+#          bundles/1.12.7/build-rpm/centos-7/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
+
+    - name: Upload to release
+      uses: JasonEtco/upload-to-release@master
+      with:
+        args: bundles/1.12.7/build-rpm/centos-7/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
