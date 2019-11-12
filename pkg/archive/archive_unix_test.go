@@ -217,9 +217,6 @@ func TestTarUntarWithXattr(t *testing.T) {
 	if err := ioutil.WriteFile(filepath.Join(origin, "3"), []byte("will be ignored"), 0700); err != nil {
 		t.Fatal(err)
 	}
-	if err := system.Lsetxattr(filepath.Join(origin, "2"), "security.capability", []byte{0x00}, 0); err != nil {
-		t.Fatal(err)
-	}
 
 	for _, c := range []Compression{
 		Uncompressed,
