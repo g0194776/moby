@@ -52,12 +52,14 @@ const (
 
 var (
 	// Slice of drivers that should be used in an order
+	// Adjusted default priority for better driver usage.
 	priority = []string{
-		"aufs",
 		"btrfs",
 		"zfs",
-		"devicemapper",
+		"overlay2",
+		"aufs",
 		"overlay",
+		"devicemapper",
 		"vfs",
 	}
 
