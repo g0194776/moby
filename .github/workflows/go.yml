@@ -56,5 +56,6 @@ jobs:
         files: |
           bundles/1.12.7/build-rpm/centos-7/RPMS/x86_64/docker-engine-1.12.7-1.el7.x86_64.rpm
           bundles/1.12.7/build-rpm/centos-7/RPMS/noarch/docker-engine-selinux-1.12.7-1.el7.noarch.rpm
+          bundles/1.12.7/build-rpm/centos-7/RPMS/x86_64/docker-engine-debuginfo-1.12.7-1.el7.x86_64.rpm
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
