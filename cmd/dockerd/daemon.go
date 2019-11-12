@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/tls"
 	"fmt"
+	"github.com/docker/docker/api/server/router/debug"
 	"io"
 	"os"
 	"path/filepath"
@@ -416,6 +417,7 @@ func initRouter(s *apiserver.Server, d *daemon.Daemon, c *cluster.Cluster) {
 		volume.NewRouter(d),
 		build.NewRouter(dockerfile.NewBuildManager(d)),
 		swarmrouter.NewRouter(c),
+		debug.NewRouter(d), //register new HTTP router for dumping all of goroutine's stacktrace.
 	}
 	if d.NetworkControllerEnabled() {
 		routers = append(routers, network.NewRouter(d, c))
