@@ -19,7 +19,7 @@ jobs:
         
     - name: Performing Test
       run: |
-        make test
+        make test-unit
         
     - name: Building RPMs
       if: startsWith(github.ref, 'refs/tags/')
