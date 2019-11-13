@@ -243,13 +243,14 @@ RUN set -x \
 	&& go build -v -o /usr/local/bin/tomlv github.com/BurntSushi/toml/cmd/tomlv \
 	&& rm -rf "$GOPATH"
 
-# Install runc
-ENV RUNC_COMMIT 50a19c6ff828c58e5dab13830bd3dacde268afe5
+# Install & replace runc binary to the rancher community offered version.
+ENV RUNC_BRANCH release-v1.12.6
 RUN set -x \
 	&& export GOPATH="$(mktemp -d)" \
-	&& git clone https://github.com/docker/runc.git "$GOPATH/src/github.com/opencontainers/runc" \
+	&& git clone https://github.com/rancher/runc-cve.git "$GOPATH/src/github.com/opencontainers/runc" \
 	&& cd "$GOPATH/src/github.com/opencontainers/runc" \
-	&& git checkout -q "$RUNC_COMMIT" \
+	&& git checkout "$RUNC_BRANCH" \
+	&& sed -i "s/1.0.0-rc2/1.0.0-rc2-rancher/g" VERSION \
 	&& make static BUILDTAGS="seccomp apparmor selinux" \
 	&& cp runc /usr/local/bin/docker-runc \
 	&& rm -rf "$GOPATH"
