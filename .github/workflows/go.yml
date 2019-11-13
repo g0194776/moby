@@ -1,4 +1,4 @@
-name: test
+name: generic
 on: [push]
 jobs:
   build:
