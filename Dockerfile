@@ -216,12 +216,12 @@ RUN set -x \
 	&& rm -rf "$GOPATH"
 
 # Install & replace runc binary to the rancher community offered version.
-ENV RUNC_BRANCH release-v1.12.6
+ENV RUNC_COMMIT 20c0351ba557183e6b54075e862f20a07f50aad3
 RUN set -x \
 	&& export GOPATH="$(mktemp -d)" \
 	&& git clone https://github.com/rancher/runc-cve.git "$GOPATH/src/github.com/opencontainers/runc" \
 	&& cd "$GOPATH/src/github.com/opencontainers/runc" \
-	&& git checkout "$RUNC_BRANCH" \
+	&& git checkout -q "$RUNC_COMMIT" \
 	&& sed -i "s/1.0.0-rc2/1.0.0-rc2-rancher/g" VERSION \
 	&& make static BUILDTAGS="seccomp apparmor selinux" \
 	&& cp runc /usr/local/bin/docker-runc \
